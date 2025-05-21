@@ -56,4 +56,4 @@ I primi 4 punti sono i più critici, riuscire ad impostare correttamente il prob
 
 ## Licenza
 
-La licenza scelta per il progetto è la AGPL v3, si veda file allegato.
+La licenza scelta per il progetto è la [AGPL 3.0 License](LICENSE).
