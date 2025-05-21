@@ -47,9 +47,9 @@ I primi 4 punti sono i più critici, riuscire ad impostare correttamente il prob
 1.​ Gini Index come criterio di splitting
 2.​ Cost Complexity Pruning per evitare la possibilità di overfitting
 3.​ Parametri statici di stop rule per decision tree, quali:
-  a.​ Max Depth
-  b.​ Min Sample Split
-  c.​ Min Sample Leaf
-  d.​ Max Leaf Node
+  -​ Max Depth
+  -​ Min Sample Split
+  -​ Min Sample Leaf
+  -​ Max Leaf Node
 4.​ Bagging per migliorare la varianza, di cui sarà verificata la bontà utilizzando Out Of Bag error
 5.​ In base ai risultati ottenuti con bagging potrei valutare di utilizzare Random Forest e verificare la bontà con OOB error
