@@ -6,6 +6,8 @@ Il nostro gruppo è composto da Tiziano Costa e Leonardo Parise e intendiamo stu
 Per farlo abbiamo scelto di utilizzare modelli di classificazione per determinare la presenza di guasto o meno.
 Proveremo ad applicare la regressione logistica e decision tree.
 
+I dati sono stati presi al link: [PHM North America 2024](https://data.phmsociety.org/phm2024-conference-data-challenge/)
+
 ## Motivazione
 
 Nell’industria il guadagno è determinato dalla capacità produttiva oraria, riuscire quindi a garantire un’alta percentuale di funzionamento del macchinario nel periodo è cruciale.
