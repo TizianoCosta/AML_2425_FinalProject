@@ -16,12 +16,6 @@ ROC_filename = f"roc_curve{timestamp}.png"
 y_train = [0, 1, 0, 1, 0, 0, 0, 0]
 y_pred = [0, 1, 1, 1, 0, 1, 0, 0]
 
-import matplotlib.pyplot as plt
-from sklearn.metrics import (
-    accuracy_score, precision_score, recall_score,
-    roc_curve, auc
-)
-
 def evaluate_model(y_true, y_pred, roc_filename):
     """Valuta il modello e salva la curva ROC.
 
