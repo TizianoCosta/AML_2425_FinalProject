@@ -3,9 +3,16 @@ import requests
 import zipfile
 import io
 import os
+
 import pandas as pd
+import numpy as np
+
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 
 # Code for preprocessing of the dataset and for the pipeline
@@ -166,17 +173,17 @@ def create_binned_qualitative_variable(df, column_name, num_bins, strategy='quan
 
 ## PCA per indicated_air_speed e compressor_speed
 # Select the columns for PCA
-features_for_pca = data_train[['compressor_speed', 'net_power']]
+# features_for_pca = data_train[['compressor_speed', 'net_power']]
 # Initialize PCA with 1 component (to combine the two variables)
-pca = PCA(n_components=1)
+# pca = PCA(n_components=1)
 # Fit PCA on the selected features and transform them
-data_train['compressor_speed_net_power_pca'] = pca.fit_transform(features_for_pca)
+# data_train['compressor_speed_net_power_pca'] = pca.fit_transform(features_for_pca)
 
 
 
 ## Creazione di torque_times_temp
 
-data_train['torque_times_temp'] = data_train['torque_meas'] * data_train['outside_air_temp']
+# data_train['torque_times_temp'] = data_train['torque_meas'] * data_train['outside_air_temp']
 
 
 
@@ -256,6 +263,30 @@ def prepare_data_pipeline(x_path, y_path, new_column_names=None,
     if {'torque_meas', 'outside_air_temp'}.issubset(df.columns):
         df['torque_times_temp'] = df['torque_meas'] * df['outside_air_temp']
 
+    # Rimuovi colonne non necessarie
+    columns_to_drop = ['compressor_speed','net_power','indicated_air_speed','power_avail']  # Aggiungi qui altre colonne da rimuovere
+    df = df.drop(columns=columns_to_drop, errors='ignore')
+
+    # Assicurati che 'y_target' sia l'ultima colonna
+    if 'y_target' in df.columns:
+        cols = [col for col in df.columns if col != 'y_target'] + ['y_target']
+        df = df[cols]
+    else:
+        print("Warning: 'y_target' column not found in DataFrame. It will not be moved to the end.")
+
+    # Assicurati che il DataFrame non abbia colonne duplicate
+    df = df.loc[:, ~df.columns.duplicated()]
+
+    # Assicurati che il DataFrame non abbia valori NaN
+    if df.isnull().values.any():
+        print("Warning: DataFrame contains NaN values. They will be filled with 0.")
+        df = df.fillna(0)
+
+    # Assicurati che il DataFrame non abbia valori infiniti
+    if np.isinf(df.values).any():
+        print("Warning: DataFrame contains infinite values. They will be replaced with 0.")
+        df.replace([np.inf, -np.inf], 0, inplace=True)
+    
     # Standardizzazione
     if standardize:
         target = 'y_target'
@@ -284,5 +315,22 @@ data_ready = prepare_data_pipeline(
     root_transformations=root_transform,
     binning_config=binning
 )
+
+# Esempio di stampa del DataFrame preprocessato
+print(data_ready.head())
+print(data_ready.describe())
+
+n_cols = 3
+n_rows = (len(data_ready.columns) + n_cols - 1) // n_cols
+plt.figure(figsize=(15, n_rows * 4))
+for i, col in enumerate(data_ready):
+    plt.subplot(n_rows, n_cols, i + 1)
+    sns.histplot(data_ready[col], bins=50, kde=True)
+    plt.title(f'Distribution of {col}')
+    plt.xlabel(col)
+    plt.ylabel('Frequency')
+
+plt.tight_layout()
+plt.savefig("grafico.png")
 
 # data_ready ora è pronto per essere usato in un modello
